@@ -2,6 +2,7 @@ INISIALISASI KONSTANTA
 - Set ukuran minimal dan maksimal bola
 - Set sudut belok (60 derajat)
 - Set batas waktu operasi
+- set pembagian frame
 
 PROGRAM UTAMA
     MULAI LOOP UTAMA
@@ -30,26 +31,44 @@ PROGRAM UTAMA
             LANJUT ke langkah berikutnya
             
         4. NAVIGASI UTAMA
+            def belok
+            pas = false
+            JIKA titik pusat bola merah OR titik pusat bola hijau 
+                = sesuai
+            return pas
+
             SELAMA ada bola di tengah frame
                 JIKA bola tersebut merah
-                    SELAMA belum mencapai ukuran target
-                        > Sesuaikan posisi ke bola merah
-                        > Maju perlahan
+                    SELAMA belum titik pusat bola belum sesuai dengan titik yang diinginkan 
+                        #Sesuaikan posisi ke bola merah 
+                        JIKA titik pusat bola merah berada di bagian kanan frame 
+                        > belok kanan sampai titik (yang diatur) sesuai dengan titik pusat bola dengan batas sampai ( 0 <= 60 derajat )
+                        > titik pusat bola dan titik (yang inginkan (tegah frame)) sesuai = True
+                        Jika titik pusat bola merah berada di bagian kanan frame
+                        > bolek kiri sampai titik (yang diatur) sesuai dengan titik pusat bola dengan batas sampai ( 0 <= 60 derajat )
+                        > titik pusat bola dan titik (yang inginkan (tegah frame)) sesuai = True
+                        return belok
                     
-                    SETELAH mencapai bola merah dengan ukuran yang diinginkan 
-                        > Belok kiri 60 derajat
-    
                  JIKA bola tersebut hijau
-                     SELAMA belum mencapai ukuran target
-                        > sesuaikan posisi ke bola hijau
-                        > muju perlahan
-                     Setelah mencapai bola hijau dengan ukuran yang dinginkan
-                        > Belok ke kanan 60 derajat
+                     SELAMA belum titik pusat bola belum sesuai dengan titik yang diinginkan 
+                        #sesuaikan posisi ke bola hijau
+                          JIKA titik pusat bola merah berada di bagian kanan frame 
+                        > belok kanan sampai titik (yang diatur) sesuai dengan titik pusat bola dengan batas sampai ( 0 <= 60 derajat )
+                        > titik pusat bola dan titik (yang inginkan (tegah frame)) sesuai = True
+                          JIKA titik pusat bola merah berada di bagian kanan frame
+                        > bolek kiri sampai titik (yang diatur) sesuai dengan titik pusat bola dengan batas sampai ( 0 <= 60 derajat )
+                        > titik pusat bola dan titik (yang inginkan (tegah frame)) sesuai = True
+                        return belok
 
-                 JIKA tidak terdeteksi bola hijau dan merah 
-                        > maju 1 meter 
-                        > berhenti
+                JIKA bola merah ATAU hijau terdeteksi
+                > maju 1 meter dan berhenti
 
+                def jalan
+                sesuai = false
+                SELAMA ukuran bola belum sesuai 
+                > maju
+                JIKA ukuran bola sesuai 
+                return sesuai
     
                     
         5. PENANGANAN ERROR
@@ -60,7 +79,6 @@ PROGRAM UTAMA
                 
             JIKA terjadi error
                 > Catat di log
-                > Jalankan prosedur darurat
                 
         6. LOGGING
             - Catat status operasi
