@@ -2,7 +2,6 @@ INISIALISASI KONSTANTA
 - Set ukuran minimal dan maksimal bola
 - Set sudut belok (60 derajat)
 - Set batas waktu operasi
-- Set parameter PID dan filter
 
 PROGRAM UTAMA
     MULAI LOOP UTAMA
@@ -26,33 +25,32 @@ PROGRAM UTAMA
                 
         3. CEK POSISI AWAL
             JIKA bola hijau di kiri DAN bola merah di kanan
+            sesuaikan bola merah ada di frame (yang ditentukan) dan bola hijau berada di frame (yang telah ditentukan)
                 > Maju
             LANJUT ke langkah berikutnya
             
         4. NAVIGASI UTAMA
-            JIKA ada bola di tengah frame
+            SELAMA ada bola di tengah frame
                 JIKA bola tersebut merah
                     SELAMA belum mencapai ukuran target
                         > Sesuaikan posisi ke bola merah
                         > Maju perlahan
                     
-                    SETELAH mencapai bola merah
+                    SETELAH mencapai bola merah dengan ukuran yang diinginkan 
                         > Belok kiri 60 derajat
-                        > Mulai pencarian bola hijau
-                        
-                    SAAT menemukan bola hijau
-                        SELAMA belum mencapai ukuran target
-                            > Sesuaikan posisi ke bola hijau
-                            > Maju perlahan
-                        
-                        SETELAH mencapai bola hijau
-                            > Belok kanan 60 derajat
-            
-            JIKA tidak ada bola terdeteksi
-                JALANKAN POLA PENCARIAN
-                    1. Coba pencarian spiral
-                    2. Jika gagal, coba pencarian zig-zag
-                    3. Jika masih gagal, kembali ke posisi awal
+    
+                 JIKA bola tersebut hijau
+                     SELAMA belum mencapai ukuran target
+                        > sesuaikan posisi ke bola hijau
+                        > muju perlahan
+                     Setelah mencapai bola hijau dengan ukuran yang dinginkan
+                        > Belok ke kanan 60 derajat
+
+                 JIKA tidak terdeteksi bola hijau dan merah 
+                        > maju 1 meter 
+                        > berhenti
+
+    
                     
         5. PENANGANAN ERROR
             JIKA terjadi timeout
