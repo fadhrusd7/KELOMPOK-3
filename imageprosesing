@@ -1,1 +1,101 @@
+import cv2
+import numpy as np
+
+# Variabel untuk menyimpan informasi ROI
+roi_selected = False
+x_start, y_start, x_end, y_end = -1, -1, -1, -1
+
+# Fungsi untuk menangani event mouse
+def select_roi(event, x, y, flags, param):
+    global x_start, y_start, x_end, y_end, roi_selected
+    
+    if event == cv2.EVENT_LBUTTONDOWN:  # Ketika mouse ditekan
+        x_start, y_start = x, y
+        roi_selected = False
+    
+    elif event == cv2.EVENT_LBUTTONUP:  # Ketika mouse dilepas
+        x_end, y_end = x, y
+        roi_selected = True
+
+# Load the webcam device
+cam = cv2.VideoCapture("tesvideo.mp4")
+
+# Mengatur callback untuk event mouse
+cv2.namedWindow("Select ROI")
+cv2.setMouseCallback("Select ROI", select_roi)
+
+while True:
+    # Membaca frame dari webcam
+    ret, frame = cam.read()
+    
+    if not ret:
+        break
+    
+    # Jika ROI sudah dipilih, gambar kotak di sekitar area ROI
+    if roi_selected:
+        cv2.rectangle(frame, (x_start, y_start), (x_end, y_end), (0, 255, 0), 2)
+        
+    # Menampilkan frame dengan pilihan ROI
+    cv2.imshow("Select ROI", frame)
+    
+    # Jika pengguna menekan 'q', keluar dari loop
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord('q'):
+        break
+
+# Fungsi kosong untuk trackbar
+def nothing(x):
+    pass
+
+# Buat jendela untuk trackbar
+cv2.namedWindow("Trackbars")
+
+# Buat trackbar untuk HSV
+cv2.createTrackbar("Lower Hue", "Trackbars", 0, 179, nothing)
+cv2.createTrackbar("Lower Sat", "Trackbars", 0, 255, nothing)
+cv2.createTrackbar("Lower Val", "Trackbars", 0, 255, nothing)
+cv2.createTrackbar("Upper Hue", "Trackbars", 179, 179, nothing)
+cv2.createTrackbar("Upper Sat", "Trackbars", 255, 255, nothing)
+cv2.createTrackbar("Upper Val", "Trackbars", 255, 255, nothing)
+
+while True:
+    ret, frame = cam.read()
+    if not ret:
+        break
+
+    # Konversi ke gray
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+    # Ambil nilai dari trackbar
+    l_h = cv2.getTrackbarPos("Lower Hue", "Trackbars")
+    l_s = cv2.getTrackbarPos("Lower Sat", "Trackbars")
+    l_v = cv2.getTrackbarPos("Lower Val", "Trackbars")
+    u_h = cv2.getTrackbarPos("Upper Hue", "Trackbars")
+    u_s = cv2.getTrackbarPos("Upper Sat", "Trackbars")
+    u_v = cv2.getTrackbarPos("Upper Val", "Trackbars")
+
+    # Tetapkan batasan warna
+    lower_bound = np.array([l_h, l_s, l_v])
+    upper_bound = np.array([u_h, u_s, u_v])
+
+    # Masking warna berdasarkan batasan
+    if roi_selected:
+        mask = np.zeros(frame.shape[:2], dtype=np.uint8)
+        mask[y_start:y_end, x_start:x_end] = 255
+        masked_frame = cv2.bitwise_and(gray, gray, mask=mask)
+        masked_frame = cv2.inRange(masked_frame, lower_bound, upper_bound)
+
+    # Tampilkan hasil
+    cv2.imshow("Original", frame)
+    if roi_selected:
+        cv2.imshow("Mask", masked_frame)
+
+    # Tekan 'q' untuk keluar
+    if cv2.waitKey(30) & 0xFF == ord('q'):
+        break
+
+cam.release()
+cv2.destroyAllWindows()
+
+
 
