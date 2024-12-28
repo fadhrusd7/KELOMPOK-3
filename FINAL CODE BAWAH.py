@@ -173,4 +173,3 @@ def process_frame_with_navigation():
                 if red_ball and green_ball and not centroid_bola:
                     print("Tidak ada bola, maju perlahan.")
                     gerak(berhenti, turn_speed)
-                    cv2.putText(annotated_frame, f"vx: {berhenti:.2f}, vy: {
